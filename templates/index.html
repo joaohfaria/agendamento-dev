@@ -19,13 +19,13 @@
     <h2>Agendar</h2>
     <form action="/agendar" method="post">
         <label for="nome">Nome:</label>
-        <input type="text" name="nome" required>
+        <input type="text" id="nome" name="nome" required>
         <label for ="email">Email:</label>
-        <input type="email" name="email" required>
+        <input type="email" id="email" name="email" required>
         <label for="telefone">Telefone:</label>
-        <input type="tel" name="telefone" required>
-        <label for="Placa">Placa:</label>
-        <input type="text" name="placa" required>
+        <input type="tel" id="telefone" name="telefone" required>
+        <label for="placa">Placa:</label>
+        <input type="text" id="placa" name="placa" required>
         <label for="data">Data:</label>
         <input type="date" id="data" name="data" required>
         <label for="hora">Hora:</label>
@@ -40,7 +40,7 @@
         </select>
 
         <button type="submit">Agendar</button>
-    </form action="/agendar" method="post">
+    </form action="/agendar" method="post"></form>  
 
 </body>
 </html>
