@@ -17,18 +17,30 @@
     <li>Balanceamento</li>
     </ul>
     <h2>Agendar</h2>
-    <form>
+    <form action="/agendar" method="post">
         <label for="nome">Nome:</label>
-        <input type="text" pessoa="nome" required>
+        <input type="text" name="nome" required>
         <label for ="email">Email:</label>
-        <input type="email" contato="email" required>
+        <input type="email" name="email" required>
         <label for="telefone">Telefone:</label>
-        <input type="tel" numero="telefone" required>
+        <input type="tel" name="telefone" required>
         <label for="Placa">Placa:</label>
-        <input type="text" veiculo="Placa">
-        
+        <input type="text" name="placa" required>
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data" required>
+        <label for="hora">Hora:</label>
+        <input type="time" id="hora" name="hora" required>
+        <label for="Selecionar Serviço">Selecionar Serviço:</label>
+        <select name="servico" id="Selecionar Serviço" required>
+            <option value="">Selecione um serviço</option>
+            <option value="Revisão">Revisão</option>
+            <option value="Troca de Óleo">Troca de Óleo</option>
+            <option value="Alinhamento">Alinhamento</option>
+            <option value="Balanceamento">Balanceamento</option>
+        </select>
+
         <button type="submit">Agendar</button>
-    </form> 
+    </form action="/agendar" method="post">
 
 </body>
 </html>
