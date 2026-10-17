@@ -25,3 +25,15 @@ def agendar():
     db.commit()
     db.close()
     return f"Agendamento realizado com sucesso {nome}, {data} às {hora}"
+
+@app.route('/agendamentos')
+def agendamentos():
+    db = sqlite3.connect('database.db')
+    cursor = db.cursor()
+    
+    cursor.execute("SELECT * FROM agendamentos ORDER BY data, hora")
+    
+    servico = cursor.fetchall()
+    
+    db.close()
+    return render_template('agendamentos.html', agendamentos=servico )           
