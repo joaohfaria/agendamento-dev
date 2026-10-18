@@ -53,6 +53,10 @@ Em desenvolvimento. Projeto de estudo com uso real previsto na oficina.
 - [ ] Login do funcionário
 - [ ] Deploy
 
+## Ideias futuras
+
+- Lembrete automático para o cliente (e-mail ou WhatsApp) um dia antes do agendamento
+
 ## Tecnologias
 
 HTML, CSS, Python, Flask, SQLite

@@ -1,7 +1,9 @@
 #Rotas
 from main import app
-from flask import render_template, request
+from flask import render_template, request 
+from validacoes import validar_data
 import sqlite3
+
 
 @app.route('/')
 def index():
@@ -10,6 +12,8 @@ def index():
 @app.route('/agendar', methods=['POST'])
 def agendar():
 
+
+    
     nome = request.form['nome']
     email = request.form['email']
     telefone = request.form['telefone']
@@ -17,6 +21,9 @@ def agendar():
     data = request.form['data']
     hora = request.form['hora']
     servico = request.form['servico']
+    
+    if not validar_data(data, hora):
+        return "Data e hora inválidas. Por favor, selecione uma data e hora futura."
 
     db = sqlite3.connect('database.db')
     cursor = db.cursor()
