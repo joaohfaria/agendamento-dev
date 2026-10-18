@@ -49,7 +49,7 @@ Em desenvolvimento. Projeto de estudo com uso real previsto na oficina.
 - [x] Página inicial e formulário de agendamento
 - [x] Back-end recebendo o formulário (Flask)
 - [x] Banco de dados (SQLite)
-- [ ] Validação: impedir data no passado e horário já ocupado
+- [x] Validação: impedir data no passado e horário já ocupado
 - [ ] Login do funcionário
 - [ ] Deploy
 

@@ -28,6 +28,13 @@ def agendar():
     db = sqlite3.connect('database.db')
     cursor = db.cursor()
 
+    cursor.execute("SELECT * FROM agendamentos WHERE data = ? AND hora = ?", (data, hora))
+    agendamento_existente = cursor.fetchone()
+
+    if agendamento_existente:
+        db.close()
+        return "Já existe um agendamento para essa data e hora. Por favor, escolha outro horário."
+
     cursor.execute("INSERT INTO agendamentos (nome, email, telefone, placa, data, hora, servico) VALUES (?, ?, ?, ?, ?, ?, ?)", (nome, email, telefone, placa, data, hora, servico))
     db.commit()
     db.close()
