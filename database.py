@@ -17,7 +17,11 @@ cursor.execute("""CREATE TABLE agendamentos (
                     servico TEXT
                     )""")
 
-               
+cursor.execute("""CREATE TABLE IF NOT EXISTS usuarios (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    usuario TEXT NOT NULL UNIQUE,
+                    senha_hash TEXT NOT NULL
+                )""")
 
 connection.commit()
 connection.close()

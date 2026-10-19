@@ -3,7 +3,7 @@ import sqlite3
 conexao = sqlite3.connect("database.db")
 cursor = conexao.cursor()
 
-cursor.execute("SELECT * FROM agendamentos")
+cursor.execute("SELECT * FROM usuarios")
 print(cursor.fetchall())
 
 conexao.close()

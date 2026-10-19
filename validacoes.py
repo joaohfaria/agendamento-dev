@@ -1,11 +1,13 @@
 from datetime import datetime
 
-def validar_data(data, hora):
+def data_valida(data, hora):
+    try:
+        formato = "%Y-%m-%d %H:%M"
+        agendando = datetime.strptime(f"{data} {hora}", formato)
+        agora = datetime.now()
 
-    formato = "%Y-%m-%d %H:%M"
-    validar_data = datetime.strptime(f"{data} {hora}", formato)
-    agora = datetime.now()
-
-    if validar_data < agora:
+        if agendando < agora:
+            return False
+        return True
+    except ValueError:
         return False
-    return True

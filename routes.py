@@ -1,9 +1,9 @@
 #Rotas
 from main import app
-from flask import render_template, request 
-from validacoes import validar_data
+from flask import render_template, request, redirect, url_for
+from validacoes import data_valida
+from flask import session as sessao
 import sqlite3
-
 
 @app.route('/')
 def index():
@@ -12,8 +12,6 @@ def index():
 @app.route('/agendar', methods=['POST'])
 def agendar():
 
-
-    
     nome = request.form['nome']
     email = request.form['email']
     telefone = request.form['telefone']
@@ -22,7 +20,7 @@ def agendar():
     hora = request.form['hora']
     servico = request.form['servico']
     
-    if not validar_data(data, hora):
+    if not data_valida(data, hora):
         return "Data e hora inválidas. Por favor, selecione uma data e hora futura."
 
     db = sqlite3.connect('database.db')
@@ -50,4 +48,22 @@ def agendamentos():
     servico = cursor.fetchall()
     
     db.close()
-    return render_template('agendamentos.html', agendamentos=servico )           
+    return render_template('agendamentos.html', agendamentos=servico ) 
+
+@app.route('/entrar', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        senha = request.form['senha']
+
+        if usuario == app.config.get('USUARIO_CORRETO') and senha == app.config.get('SENHA_CORRETA'):
+            sessao['usuario'] = usuario
+            return redirect(url_for('sucesso'))
+        else:
+            return "Usuário ou senha incorretos. Tente novamente."
+
+    return render_template('login.html')          
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
