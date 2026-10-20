@@ -14,6 +14,7 @@ veja todos os agendamentos numa única lista.
 - Formulário de agendamento com nome, e-mail, telefone, placa, serviço, data e hora
 - Agendamentos salvos em banco de dados SQLite
 - Página de listagem dos agendamentos, ordenada por data e horário
+- Área restrita do funcionário, com login e senha armazenada como hash.
 
 ## Páginas
 
@@ -50,12 +51,13 @@ Em desenvolvimento. Projeto de estudo com uso real previsto na oficina.
 - [x] Back-end recebendo o formulário (Flask)
 - [x] Banco de dados (SQLite)
 - [x] Validação: impedir data no passado e horário já ocupado
-- [ ] Login do funcionário
+- [x] Login do funcionário
 - [ ] Deploy
 
 ## Ideias futuras
 
 - Lembrete automático para o cliente (e-mail ou WhatsApp) um dia antes do agendamento
+- Reorganizar em pacotes e separar rotas com Blueprints
 
 ## Tecnologias
 

@@ -3,10 +3,7 @@ import sqlite3
 connection = sqlite3.connect('database.db')
 cursor = connection.cursor()
 
-cursor.execute("""DROP TABLE IF EXISTS agendamentos""")
-
-cursor.execute("""CREATE TABLE agendamentos (
-                    
+cursor.execute("""CREATE TABLE IF NOT EXISTS agendamentos (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     nome TEXT,
                     email TEXT,
@@ -15,7 +12,7 @@ cursor.execute("""CREATE TABLE agendamentos (
                     data TEXT,
                     hora TEXT,
                     servico TEXT
-                    )""")
+                )""")
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS usuarios (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,3 +22,5 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS usuarios (
 
 connection.commit()
 connection.close()
+
+print("Banco pronto.")
