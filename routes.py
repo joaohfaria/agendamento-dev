@@ -97,3 +97,8 @@ def sucesso():
 
     return render_template('sucesso.html', usuario=sessao['usuario'])
 
+@app.route('/logout')
+def logout():
+    sessao.clear()
+    return redirect(url_for('login'))
+
