@@ -7,8 +7,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')    
 
-USUARIO_CORRETO = 'admin'
-SENHA_CORRETA = 'senha123'
+
 
 from routes import *
 
