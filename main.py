@@ -6,7 +6,10 @@ load_dotenv()
 FLASK_DEBUG = os.getenv('FLASK_DEBUG') == '1'
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')    
+app.secret_key = os.getenv('SECRET_KEY')
+
+if not app.secret_key:
+    raise RuntimeError("SECRET_KEY nao definido. Por favor, defina a variável de ambiente SECRET_KEY.")
 
 from routes import *
 
