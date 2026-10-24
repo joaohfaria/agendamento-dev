@@ -31,12 +31,10 @@
         <label for="hora">Hora:</label>
         <input type="time" id="hora" name="hora" required>
         <label for="Selecionar Serviço">Selecionar Serviço:</label>
-        <select name="servico" id="Selecionar Serviço" required>
-            <option value="">Selecione um serviço</option>
-            <option value="Revisão">Revisão</option>
-            <option value="Troca de Óleo">Troca de Óleo</option>
-            <option value="Alinhamento">Alinhamento</option>
-            <option value="Balanceamento">Balanceamento</option>
+        <select name="servico" id="Servico" required>
+            {% for servico in servicos %}
+                <option value="{{ servico[0] }}">{{ servico[0] }}</option>
+            {% endfor %}
         </select>
 
         <button type="submit">Agendar</button>

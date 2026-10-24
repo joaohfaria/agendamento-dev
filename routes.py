@@ -9,8 +9,29 @@ import sqlite3
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    connection = None
+    servicos = []
 
+    try:
+        connection = sqlite3.connect('database.db')
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT nome FROM servicos")
+
+        resultado = cursor.fetchall()
+        servicos = [[linha[0]] for linha in resultado]
+
+    except Exception as e:
+        print(f"Erro ao buscar serviços: {e}")
+
+    finally:
+        if connection:
+            connection.close()
+
+    return render_template('index.html', servicos=servicos)
+    
+
+      
 
 @app.route('/agendar', methods=['POST'])
 def agendar():
