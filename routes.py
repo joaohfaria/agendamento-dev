@@ -3,7 +3,8 @@ from main import app
 from flask import render_template, request, redirect, url_for
 from flask import session as sessao
 from werkzeug.security import check_password_hash
-from validacoes import data_valida
+from datetime import datetime
+from validacoes import validar_agendamento
 import sqlite3
 
 
@@ -36,16 +37,17 @@ def index():
 @app.route('/agendar', methods=['POST'])
 def agendar():
 
-    nome = request.form['nome']
-    email = request.form['email']
-    telefone = request.form['telefone']
-    placa = request.form['placa']
-    data = request.form['data']
-    hora = request.form['hora']
-    servico = request.form['servico']
+    nome = request.form.get('nome')
+    email = request.form.get('email')
+    telefone = request.form.get('telefone')
+    placa = request.form.get('placa')
+    data = request.form.get('data')
+    hora = request.form.get('hora')
+    servico = request.form.get('servico')
 
-    if not data_valida(data, hora):
-        return "Data e hora inválidas. Por favor, selecione uma data e hora futura."
+    erro = validar_agendamento(data, hora)
+    if erro:
+        return erro
 
     db = sqlite3.connect('database.db')
     cursor = db.cursor()
@@ -56,6 +58,13 @@ def agendar():
     if agendamento_existente:
         db.close()
         return "Já existe um agendamento para essa data e hora. Por favor, escolha outro horário."
+
+    cursor.execute("SELECT id FROM servicos WHERE nome = ?", (servico,))
+    servico_encontrado = cursor.fetchone()
+
+    if not servico_encontrado:
+        db.close()
+        return "Serviço inválido."
 
     cursor.execute(
         "INSERT INTO agendamentos (nome, email, telefone, placa, data, hora, servico) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -86,8 +95,8 @@ def agendamentos():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        usuario = request.form['usuario']
-        senha = request.form['senha']
+        usuario = request.form.get('usuario')
+        senha = request.form.get('senha')
 
         db = sqlite3.connect('database.db')
         cursor = db.cursor()
