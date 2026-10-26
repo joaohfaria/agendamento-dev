@@ -58,6 +58,7 @@ Em desenvolvimento. Projeto de estudo com uso real previsto na oficina.
 
 - Lembrete automático para o cliente (e-mail ou WhatsApp) um dia antes do agendamento
 - Reorganizar em pacotes e separar rotas com Blueprints
+- CSS e layout responsivo (funcionar bem no celular)
 
 ## Tecnologias
 

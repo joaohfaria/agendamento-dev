@@ -6,8 +6,7 @@ from werkzeug.security import check_password_hash
 from datetime import datetime
 from validacoes import validar_agendamento
 import sqlite3
-
-
+  
 @app.route('/')
 def index():
     connection = None
@@ -44,6 +43,12 @@ def agendar():
     data = request.form.get('data')
     hora = request.form.get('hora')
     servico = request.form.get('servico')
+
+    campos_obrigatorios = [nome, email, telefone, placa, data, hora, servico]
+    
+    if not all(campos_obrigatorios):
+        return "Todos os campos são obrigatórios."
+
 
     erro = validar_agendamento(data, hora)
     if erro:
