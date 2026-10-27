@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import os
 from dotenv import load_dotenv
+from database import criar_tabelas
 
 load_dotenv()
 FLASK_DEBUG = os.getenv('FLASK_DEBUG') == '1'
@@ -10,6 +11,8 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 if not app.secret_key:
     raise RuntimeError("SECRET_KEY nao definido. Por favor, defina a variável de ambiente SECRET_KEY.")
+
+criar_tabelas()
 
 from routes import *
 
