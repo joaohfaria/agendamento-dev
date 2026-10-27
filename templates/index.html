@@ -29,7 +29,12 @@
         <label for="data">Data:</label>
         <input type="date" id="data" name="data" required>
         <label for="hora">Hora:</label>
-        <input type="time" id="hora" name="hora" required>
+        <select name="hora" id="hora" required>
+            <option value="">Selecione um horário</option>
+            {% for horario in horarios %}
+                <option value="{{horario}}">{{horario}}</option>
+            {% endfor %}
+        </select>
         <label for="Selecionar Serviço">Selecionar Serviço:</label>
         <select name="servico" id="Servico" required>
             {% for servico in servicos %}

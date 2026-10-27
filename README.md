@@ -15,6 +15,8 @@ veja todos os agendamentos numa única lista.
 - Agendamentos salvos em banco de dados SQLite
 - Página de listagem dos agendamentos, ordenada por data e horário
 - Área restrita do funcionário, com login e senha armazenada como hash.
+- Horários disponíveis gerados a partir do horário de funcionamento
+  (seg–sex, 08h15 às 17h20, com intervalo de almoço), a cada 45 minutos
 
 ## Páginas
 

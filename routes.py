@@ -4,9 +4,10 @@ from flask import render_template, request, redirect, url_for
 from flask import session as sessao
 from werkzeug.security import check_password_hash
 from datetime import datetime
-from validacoes import validar_agendamento
+from validacoes import validar_agendamento, HORARIOS_PERMITIDOS
 import sqlite3
-  
+
+
 @app.route('/')
 def index():
     connection = None
@@ -28,7 +29,7 @@ def index():
         if connection:
             connection.close()
 
-    return render_template('index.html', servicos=servicos)
+    return render_template('index.html', servicos=servicos, horarios=HORARIOS_PERMITIDOS)
     
 
       
