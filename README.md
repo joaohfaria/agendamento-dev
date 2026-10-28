@@ -26,6 +26,13 @@ veja todos os agendamentos numa única lista.
 | `/agendar` | POST | Recebe o formulário e grava o agendamento |
 | `/agendamentos` | GET | Lista todos os agendamentos |
 
+## Limitações conhecidas
+
+- Banco SQLite em hospedagem gratuita: os dados podem ser reiniciados
+  junto com o servidor. É uma demonstração.
+- Sem envio de e-mail de confirmação (planejado).
+- Layout ainda sem CSS.
+
 ## Tecnologias
 
 Python, Flask, SQLite, HTML
