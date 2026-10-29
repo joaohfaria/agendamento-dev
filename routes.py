@@ -121,17 +121,10 @@ def login():
             return "Usuário ou senha inválidos."
 
         sessao['usuario'] = usuario
-        return redirect(url_for('sucesso'))
+        return redirect(url_for('agendamentos'))
 
     return render_template('login.html')
 
-
-@app.route('/sucesso')
-def sucesso():
-    if 'usuario' not in sessao:
-        return redirect(url_for('login'))
-
-    return render_template('sucesso.html', usuario=sessao['usuario'])
 
 @app.route('/logout')
 def logout():
