@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>SubSolo</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block titulo %}SubSolo - Agendamento{% endblock %}
+
+{% block conteudo %}
     <h1>Agendamentos</h1>
     [<a href="{{ url_for('logout') }}">Sair</a>]
     <p>Lista de serviços agendados:</p>
     {% for item in agendamentos %}
     <p>{{ item[0] }} - {{ item[3] }} - {{ item[4] }} - {{ item[5] }} - {{ item[6] }}</p>
     {% endfor %}
-</body>
-</html>
+{% endblock %}

@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block titulo %}Login{% endblock %}
+
+{% block conteudo %}
     <h2>Tela de Login</h2>
+
     <form action="/login" method="POST">
-        <label for="usuario">Usuário:</label><br>
-        <input type="text" id="usuario" name="usuario" required><br><br>
-        
-        
+        <label for="usuario">Usuário:</label>
+        <input type="text" id="usuario" name="usuario" required>
+
         <label for="senha">Senha:</label>
         <input type="password" id="senha" name="senha" required>
-        
-        
+
         <button type="submit">Entrar</button>
     </form>
-</body>
-</html>
+{% endblock %}

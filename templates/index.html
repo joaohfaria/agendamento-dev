@@ -1,52 +1,54 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>SubSolo</title>
-</head>
-<body>
+{% extends "base.html" %}
 
+{% block titulo %}SubSolo - Agendamento{% endblock %}
+
+{% block conteudo %}
     <h1>SubSolo</h1>
-    <p>Horario De Funcionamento: Segunda a Sexta, 8h às 18h</p>
+    <p>Horário de funcionamento: segunda a sexta, 8h às 18h</p>
     <p>Agende a revisão do seu carro pela internet.</p>
+
     <h2>Serviços</h2>
     <ul>
-    <li>Revisão</li>
-    <li>Troca de Óleo</li>
-    <li>Alinhamento</li>
-    <li>Balanceamento</li>
+        {% for servico in servicos %}
+            <li>{{ servico[0] }}</li>
+        {% endfor %}
     </ul>
+
     <h2>Agendar</h2>
     <form action="/agendar" method="post">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" required>
-        <label for ="email">Email:</label>
+
+        <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
+
         <label for="telefone">Telefone:</label>
         <input type="tel" id="telefone" name="telefone" required>
+
         <label for="placa">Placa:</label>
         <input type="text" id="placa" name="placa" required>
+
         <label for="data">Data:</label>
         <input type="date" id="data" name="data" required>
+
         <label for="hora">Hora:</label>
         <select name="hora" id="hora" required>
             <option value="">Selecione um horário</option>
             {% for horario in horarios %}
-                <option value="{{horario}}">{{horario}}</option>
+                <option value="{{ horario }}">{{ horario }}</option>
             {% endfor %}
         </select>
-        <label for="Selecionar Serviço">Selecionar Serviço:</label>
-        <select name="servico" id="Servico" required>
+
+        <label for="servico">Selecionar serviço:</label>
+        <select name="servico" id="servico" required>
+            <option value="">Selecione um serviço</option>
             {% for servico in servicos %}
                 <option value="{{ servico[0] }}">{{ servico[0] }}</option>
             {% endfor %}
         </select>
 
         <button type="submit">Agendar</button>
-    </form action="/agendar" method="post"></form>  
+    </form>
 
-    <a href="/agendamentos">Ver agendamentos</a>
-</body>
-</html>
+    <p><a href="/agendamentos">Ver agendamentos</a></p>
+{% endblock %}
