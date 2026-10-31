@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from routes import agendar
 
 HORA_INICIO = "08:15"
 # ultimo horario aceito: o servico precisa terminar antes das 18h
@@ -63,3 +64,4 @@ def validar_agendamento(data_str: str, hora_str: str) -> str | None:
         return f"Horário de almoço: das {ALMOCO_INICIO} às {ALMOCO_FIM} não há atendimento."
 
     return None
+

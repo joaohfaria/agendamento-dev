@@ -44,3 +44,12 @@ button {
     color: #fff;
     cursor: pointer;
 }
+
+.erro {
+    color: #8a1c1c;
+    background-color: #fdecea;
+    border: 1px solid #e0b4b0;
+    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 16px;
+}

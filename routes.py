@@ -7,36 +7,39 @@ from datetime import datetime
 from validacoes import validar_agendamento, HORARIOS_PERMITIDOS
 import sqlite3
 
-
-@app.route('/')
-def index():
+def buscar_servicos():
     connection = None
     servicos = []
-
     try:
         connection = sqlite3.connect('database.db')
         cursor = connection.cursor()
-
         cursor.execute("SELECT nome FROM servicos")
-
-        resultado = cursor.fetchall()
-        servicos = [[linha[0]] for linha in resultado]
-
+        servicos = cursor.fetchall()
     except Exception as e:
         print(f"Erro ao buscar serviços: {e}")
-
     finally:
         if connection:
             connection.close()
+    return servicos
 
-    return render_template('index.html', servicos=servicos, horarios=HORARIOS_PERMITIDOS)
-    
 
-      
+def pagina_inicial(erro=None, dados=None):
+    return render_template(
+        'index.html',
+        servicos=buscar_servicos(),
+        horarios=HORARIOS_PERMITIDOS,
+        erro=erro,
+        dados=dados
+    )
+
+
+@app.route('/')
+def index():
+    return pagina_inicial()
+
 
 @app.route('/agendar', methods=['POST'])
 def agendar():
-
     nome = request.form.get('nome')
     email = request.form.get('email')
     telefone = request.form.get('telefone')
@@ -45,15 +48,17 @@ def agendar():
     hora = request.form.get('hora')
     servico = request.form.get('servico')
 
-    campos_obrigatorios = [nome, email, telefone, placa, data, hora, servico]
-    
-    if not all(campos_obrigatorios):
-        return "Todos os campos são obrigatórios."
+    dados_preenchidos = {
+        'nome': nome, 'email': email, 'telefone': telefone,
+        'placa': placa, 'data': data, 'hora': hora, 'servico': servico
+    }
 
+    if not all([nome, email, telefone, placa, data, hora, servico]):
+        return pagina_inicial("Todos os campos são obrigatórios.", dados_preenchidos)
 
     erro = validar_agendamento(data, hora)
     if erro:
-        return erro
+        return pagina_inicial(erro, dados_preenchidos)
 
     db = sqlite3.connect('database.db')
     cursor = db.cursor()
@@ -63,14 +68,14 @@ def agendar():
 
     if agendamento_existente:
         db.close()
-        return "Já existe um agendamento para essa data e hora. Por favor, escolha outro horário."
+        return pagina_inicial("Já existe um agendamento para essa data e hora. Escolha outro horário.", dados_preenchidos)
 
     cursor.execute("SELECT id FROM servicos WHERE nome = ?", (servico,))
     servico_encontrado = cursor.fetchone()
 
     if not servico_encontrado:
         db.close()
-        return "Serviço inválido."
+        return pagina_inicial("Serviço inválido.", dados_preenchidos)
 
     cursor.execute(
         "INSERT INTO agendamentos (nome, email, telefone, placa, data, hora, servico) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -80,23 +85,6 @@ def agendar():
     db.close()
 
     return f"Agendamento realizado com sucesso {nome}, {data} às {hora}"
-
-
-@app.route('/agendamentos')
-def agendamentos():
-    if 'usuario' not in sessao:
-        return redirect(url_for('login'))
-
-    db = sqlite3.connect('database.db')
-    cursor = db.cursor()
-
-    cursor.execute("SELECT nome, email, telefone, placa, data, hora, servico FROM agendamentos ORDER BY data, hora")
-    lista = cursor.fetchall()
-
-    db.close()
-
-    return render_template('agendamentos.html', agendamentos=lista)
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
