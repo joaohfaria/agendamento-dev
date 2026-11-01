@@ -84,7 +84,13 @@ def agendar():
     db.commit()
     db.close()
 
-    return f"Agendamento realizado com sucesso {nome}, {data} às {hora}"
+    return render_template(
+    'agendamento_confirmado.html',
+    nome=nome,
+    servico=servico,
+    data=data,
+    hora=hora
+    )   
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

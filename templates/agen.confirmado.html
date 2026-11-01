@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block titulo %}Agendamento confirmado{% endblock %}
+
+{% block conteudo %}
+    <h1>Agendamento confirmado</h1>
+
+    <p>Tudo certo, {{ nome }}. Seu horário está reservado.</p>
+
+    <ul>
+        <li><strong>Serviço:</strong> {{ servico }}</li>
+        <li><strong>Data:</strong> {{ data }}</li>
+        <li><strong>Horário:</strong> {{ hora }}</li>
+    </ul>
+
+    <p>Se precisar desmarcar, entre em contato com a oficina.</p>
+
+    <p><a href="/">Voltar ao início</a></p>
+{% endblock %}
