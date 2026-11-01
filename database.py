@@ -7,13 +7,14 @@ def criar_tabelas():
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS agendamentos (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT NOT NULL UNIQUE,
+                    nome TEXT NOT NULL,
                     email TEXT,
                     telefone TEXT,
                     placa TEXT,
                     data TEXT,
                     hora TEXT,
-                    servico TEXT NOT NULL 
+                    servico TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'Aguardando'                       
                 )""")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS usuarios (
