@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from routes import agendar
+
 
 HORA_INICIO = "08:15"
 # ultimo horario aceito: o servico precisa terminar antes das 18h
