@@ -118,16 +118,19 @@ def login():
 
         cursor.execute("SELECT senha_hash FROM usuarios WHERE usuario = ?", (usuario,))
         encontrado = cursor.fetchone()
+        print("CHEGOU usuario:", repr(usuario))
+        print("CHEGOU senha:", repr(senha))
+        print("ENCONTRADO:", encontrado)
 
         db.close()
 
         if not encontrado:
-            return "Usuário ou senha inválidos."
+            return render_template('login.html', erro="Usuário ou senha inválidos.")
 
         senha_hash = encontrado[0]
 
         if not check_password_hash(senha_hash, senha):
-            return "Usuário ou senha inválidos."
+            return render_template('login.html', erro="Usuário ou senha inválidos.")
 
         sessao['usuario'] = usuario
         return redirect(url_for('agendamentos'))

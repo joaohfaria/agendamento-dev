@@ -4,7 +4,7 @@
 
 {% block conteudo %}
     <h2>Tela de Login</h2>
-
+    
     <form action="/login" method="POST">
         <label for="usuario">Usuário:</label>
         <input type="text" id="usuario" name="usuario" required>
@@ -13,5 +13,8 @@
         <input type="password" id="senha" name="senha" required>
 
         <button type="submit">Entrar</button>
+        {% if erro %}
+            <p class="erro">{{ erro }}</p>
+        {% endif %}
     </form>
 {% endblock %}
