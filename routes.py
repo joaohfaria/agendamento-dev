@@ -100,7 +100,7 @@ def agendamentos():
     db = sqlite3.connect('database.db')
     cursor = db.cursor()
 
-    cursor.execute("SELECT nome, email, telefone, placa, data, hora, servico FROM agendamentos ORDER BY data, hora")
+    cursor.execute("SELECT nome, email, telefone, placa, data, hora, servico, status FROM agendamentos ORDER BY data, hora")
     lista = cursor.fetchall()
 
     db.close()
