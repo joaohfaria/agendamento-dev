@@ -100,7 +100,7 @@ def agendamentos():
     db = sqlite3.connect('database.db')
     cursor = db.cursor()
 
-    cursor.execute("SELECT nome, email, telefone, placa, data, hora, servico, status FROM agendamentos ORDER BY data, hora")
+    cursor.execute("SELECT id, nome, email, telefone, placa, data, hora, servico, status FROM agendamentos ORDER BY data, hora")
     lista = cursor.fetchall()
 
     db.close()
@@ -137,6 +137,21 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/atualizar_status/<int:agendamento_id>', methods=['POST'])
+def atualizar_status(agendamento_id):
+    if 'usuario' not in sessao:
+        return redirect(url_for('login'))
+
+    novo_status = request.form.get('status')
+
+    db = sqlite3.connect('database.db')
+    cursor = db.cursor()
+
+    cursor.execute("UPDATE agendamentos SET status = ? WHERE id = ?", (novo_status, agendamento_id))
+    db.commit()
+    db.close()
+
+    return redirect(url_for('agendamentos'))
 
 @app.route('/logout')
 def logout():

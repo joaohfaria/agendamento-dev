@@ -4,10 +4,9 @@ def criar_tabelas():
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
 
-
     cursor.execute("""CREATE TABLE IF NOT EXISTS agendamentos (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT NOT NULL,
+                    nome TEXT NOT NULL UNIQUE,
                     email TEXT,
                     telefone TEXT,
                     placa TEXT,

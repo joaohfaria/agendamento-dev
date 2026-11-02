@@ -7,6 +7,14 @@
     [<a href="{{ url_for('logout') }}">Sair</a>]
     <p>Lista de serviços agendados:</p>
     {% for item in agendamentos %}
-    <p>{{ item[0] }} - {{ item[3] }} - {{ item[4] }} - {{ item[5] }} - {{ item[6] }} - {{ item[7] }}</p>
+    <p>{{ item[1] }} - {{ item[2] }} - {{ item[3] }} - {{ item[4] }} - {{ item[5] }} - {{ item[6] }} - {{ item[7] }} - {{ item[8] }} </p>
+    <form method="post" action="{{ url_for('atualizar_status', agendamento_id=item[0]) }}">
+        <select name="status">
+            <option value="Aguardando" {% if item[8] == "Aguardando" %}selected{% endif %}>Aguardando</option>
+            <option value="Em andamento" {% if item[8] == "Em andamento" %}selected{% endif %}>Em andamento</option>
+            <option value="Pronto" {% if item[8] == "Pronto" %}selected{% endif %}>Pronto</option>
+        </select>
+        <input type="submit" value="Atualizar Status">
+    </form>
     {% endfor %}
 {% endblock %}
