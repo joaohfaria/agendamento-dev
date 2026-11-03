@@ -16,6 +16,8 @@ BLOQUEIO_ALMOCO_FIM = datetime.strptime(ALMOCO_FIM, "%H:%M").time()
 
 HORARIOS_PERMITIDOS = []
 
+STATUS_PERMITIDOS = ["Aguardando", "Em andamento", "Concluído"]
+
 horario_atual = datetime.strptime(HORA_INICIO, "%H:%M")
 horario_limite = datetime.strptime(HORA_FIM, "%H:%M")
 
@@ -64,4 +66,7 @@ def validar_agendamento(data_str: str, hora_str: str) -> str | None:
         return f"Horário de almoço: das {ALMOCO_INICIO} às {ALMOCO_FIM} não há atendimento."
 
     return None
+
+   
+        
 

@@ -24,7 +24,7 @@ def criar_tabelas():
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS servicos (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT NOT NULL,
+                    nome TEXT NOT NULL UNIQUE,
                     descricao TEXT,
                     preco REAL
                 )""")

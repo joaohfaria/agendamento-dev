@@ -4,7 +4,7 @@ from flask import render_template, request, redirect, url_for
 from flask import session as sessao
 from werkzeug.security import check_password_hash
 from datetime import datetime
-from validacoes import validar_agendamento, HORARIOS_PERMITIDOS
+from validacoes import validar_agendamento, HORARIOS_PERMITIDOS, STATUS_PERMITIDOS
 import sqlite3
 
 def buscar_servicos():
@@ -118,9 +118,6 @@ def login():
 
         cursor.execute("SELECT senha_hash FROM usuarios WHERE usuario = ?", (usuario,))
         encontrado = cursor.fetchone()
-        print("CHEGOU usuario:", repr(usuario))
-        print("CHEGOU senha:", repr(senha))
-        print("ENCONTRADO:", encontrado)
 
         db.close()
 
@@ -144,6 +141,10 @@ def atualizar_status(agendamento_id):
 
     novo_status = request.form.get('status')
 
+    if novo_status not in STATUS_PERMITIDOS:
+        permitidos = ", ".join(STATUS_PERMITIDOS)
+        return f"Status invalido. Apenas {permitidos} sao aceitos.", 400
+
     db = sqlite3.connect('database.db')
     cursor = db.cursor()
 
@@ -157,4 +158,6 @@ def atualizar_status(agendamento_id):
 def logout():
     sessao.clear()
     return redirect(url_for('login'))
+
+
 
