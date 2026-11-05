@@ -12,3 +12,8 @@ def test_index():
     assert b'data' in response.data
     assert b'hora' in response.data
     assert b'servico' in response.data
+
+def test_agendamento_sem_login():
+    response = client.get('/agendamentos')
+    assert response.status_code == 302  # Redireciona para a página de login
+    assert b'login' in response.data or b'Login' in response.data
