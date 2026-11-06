@@ -26,3 +26,15 @@ def test_login(usuario_teste):
     )
     assert response.status_code == 200
     assert b'Agendamentos' in response.data
+
+def test_status_invalido(usuario_teste):
+
+    client.post(
+        '/login',
+        data={'usuario': usuario_teste['usuario'], 'senha': usuario_teste['senha']},
+        follow_redirects=True
+    )
+    
+    response = client.post('/atualizar_status/1', data={'status': 'Pago'})
+    assert response.status_code == 400
+    
