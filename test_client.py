@@ -17,3 +17,12 @@ def test_agendamento_sem_login():
     response = client.get('/agendamentos')
     assert response.status_code == 302  # Redireciona para a página de login
     assert b'login' in response.data or b'Login' in response.data
+
+def test_login(usuario_teste):
+    response = client.post(
+        '/login',
+        data={'usuario': usuario_teste['usuario'], 'senha': usuario_teste['senha']},
+        follow_redirects=True
+    )
+    assert response.status_code == 200
+    assert b'Agendamentos' in response.data
