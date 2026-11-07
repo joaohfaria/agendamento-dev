@@ -60,37 +60,45 @@ def agendar():
     if erro:
         return pagina_inicial(erro, dados_preenchidos)
 
-    db = sqlite3.connect('database.db')
-    cursor = db.cursor()
+    db = None
+    try:
+        db = sqlite3.connect('database.db')
+        cursor = db.cursor()
 
-    cursor.execute("SELECT id FROM agendamentos WHERE data = ? AND hora = ?", (data, hora))
-    agendamento_existente = cursor.fetchone()
+        cursor.execute("SELECT id FROM agendamentos WHERE data = ? AND hora = ?", (data, hora))
+        agendamento_existente = cursor.fetchone()
+        
+    
 
-    if agendamento_existente:
-        db.close()
-        return pagina_inicial("Já existe um agendamento para essa data e hora. Escolha outro horário.", dados_preenchidos)
+        if agendamento_existente:
+            return pagina_inicial("Já existe um agendamento para essa data e hora. Escolha outro horário.", dados_preenchidos)
 
-    cursor.execute("SELECT id FROM servicos WHERE nome = ?", (servico,))
-    servico_encontrado = cursor.fetchone()
+        cursor.execute("SELECT id FROM servicos WHERE nome = ?", (servico,))
+        servico_encontrado = cursor.fetchone()
 
-    if not servico_encontrado:
-        db.close()
-        return pagina_inicial("Serviço inválido.", dados_preenchidos)
+        if not servico_encontrado:
+        
+            return pagina_inicial("Serviço inválido.", dados_preenchidos)
+  
+        cursor.execute(
+            "INSERT INTO agendamentos (nome, email, telefone, placa, data, hora, servico) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (nome, email, telefone, placa, data, hora, servico)
+        )
+        db.commit()
+        
 
-    cursor.execute(
-        "INSERT INTO agendamentos (nome, email, telefone, placa, data, hora, servico) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        (nome, email, telefone, placa, data, hora, servico)
-    )
-    db.commit()
-    db.close()
-
-    return render_template(
-    'agendamento_confirmado.html',
-    nome=nome,
-    servico=servico,
-    data=data,
-    hora=hora
-    )   
+        return render_template(
+        'agendamento_confirmado.html',
+        nome=nome,
+        servico=servico,
+        data=data,
+        hora=hora
+        )
+    
+    finally:
+        if db:
+            db.close()
+   
 
 @app.route('/agendamentos')
 def agendamentos():
