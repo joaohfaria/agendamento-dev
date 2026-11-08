@@ -57,3 +57,9 @@ def test_senha_invalida(usuario_teste):
     )
     assert response.status_code == 200
     assert 'Usuário ou senha inválidos.' in response.data.decode('utf-8')
+
+def test_agendamento_valido(agendamento_teste):
+    response = client.post('/agendar', data=agendamento_teste, follow_redirects=True)
+    assert response.status_code == 200
+    assert 'sucesso' in response.data.decode('utf-8')
+
