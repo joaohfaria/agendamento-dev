@@ -1,6 +1,6 @@
 #Rotas
 from main import app
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from flask import session as sessao
 from werkzeug.security import check_password_hash
 from datetime import datetime
@@ -87,13 +87,8 @@ def agendar():
         db.commit()
         
 
-        return render_template(
-        'agendamento_confirmado.html',
-        nome=nome,
-        servico=servico,
-        data=data,
-        hora=hora
-        )
+        flash(f"Seu agendamento foi realizado com sucesso {nome} para {data} às {hora}.")
+        return redirect(url_for('agendamento_confirmado'))
     
     finally:
         if db:
@@ -161,6 +156,10 @@ def atualizar_status(agendamento_id):
     db.close()
 
     return redirect(url_for('agendamentos'))
+
+@app.route('/agendamento_confirmado')
+def agendamento_confirmado():
+    return render_template('agendamento_confirmado.html')
 
 @app.route('/logout')
 def logout():
