@@ -48,4 +48,12 @@ def test_status_invalido(usuario_teste):
     
     response = client.post('/atualizar_status/1', data={'status': 'Pago'})
     assert response.status_code == 400
-    
+
+def test_senha_invalida(usuario_teste):
+    response = client.post(
+        '/login',
+        data={'usuario': usuario_teste['usuario'], 'senha': 'senha_incorreta'},
+        follow_redirects=True
+    )
+    assert response.status_code == 200
+    assert 'Usuário ou senha inválidos.' in response.data.decode('utf-8')
