@@ -1,6 +1,6 @@
-import sqlite3
+from conexao import conectar
 
-conexao = sqlite3.connect("database.db")
+conexao = conectar()
 cursor = conexao.cursor()
 
 print("--- colunas da tabela agendamentos ---")

@@ -5,13 +5,14 @@ from flask import session as sessao
 from werkzeug.security import check_password_hash
 from datetime import datetime
 from validacoes import validar_agendamento, HORARIOS_PERMITIDOS, STATUS_PERMITIDOS
-import sqlite3
+from conexao import conectar
+
 
 def buscar_servicos():
     connection = None
     servicos = []
     try:
-        connection = sqlite3.connect('database.db')
+        connection = conectar()
         cursor = connection.cursor()
         cursor.execute("SELECT nome FROM servicos")
         servicos = cursor.fetchall()
@@ -62,7 +63,7 @@ def agendar():
 
     db = None
     try:
-        db = sqlite3.connect('database.db')
+        db = conectar()
         cursor = db.cursor()
 
         cursor.execute("SELECT id FROM agendamentos WHERE data = ? AND hora = ?", (data, hora))
@@ -100,7 +101,7 @@ def agendamentos():
     if 'usuario' not in sessao:
         return redirect(url_for('login'))
 
-    db = sqlite3.connect('database.db')
+    db = conectar()
     cursor = db.cursor()
 
     cursor.execute("SELECT id, nome, email, telefone, placa, data, hora, servico, status FROM agendamentos ORDER BY data, hora")
@@ -116,7 +117,7 @@ def login():
         usuario = request.form.get('usuario')
         senha = request.form.get('senha')
 
-        db = sqlite3.connect('database.db')
+        db = conectar()
         cursor = db.cursor()
 
         cursor.execute("SELECT senha_hash FROM usuarios WHERE usuario = ?", (usuario,))
@@ -148,7 +149,7 @@ def atualizar_status(agendamento_id):
         permitidos = ", ".join(STATUS_PERMITIDOS)
         return f"Status invalido. Apenas {permitidos} sao aceitos.", 400
 
-    db = sqlite3.connect('database.db')
+    db = conectar()
     cursor = db.cursor()
 
     cursor.execute("UPDATE agendamentos SET status = ? WHERE id = ?", (novo_status, agendamento_id))

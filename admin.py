@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from werkzeug.security import generate_password_hash
-
+from conexao import conectar
 
 def criar_admin():
     usuario = os.getenv('ADMIN_USUARIO')
@@ -13,7 +13,7 @@ def criar_admin():
 
     senha_hash = generate_password_hash(senha)
 
-    db = sqlite3.connect('database.db')
+    db = conectar()
     cursor = db.cursor()
 
     cursor.execute(

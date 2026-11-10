@@ -1,4 +1,4 @@
-import sqlite3
+from conexao import conectar
 from werkzeug.security import generate_password_hash
 
 def criar_usuario(usuario, senha):
@@ -10,7 +10,7 @@ def criar_usuario(usuario, senha):
     connection = None # Inicializa para evitar erro no bloco finally se o connect falhar
 
     try:
-        connection = sqlite3.connect('database.db')
+        connection = conectar()
         cursor = connection.cursor()
 
         # CORREÇÃO: Garante que a tabela 'usuarios' existe antes de fazer o INSERT

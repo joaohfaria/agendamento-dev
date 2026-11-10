@@ -1,6 +1,7 @@
 import sqlite3
 import pytest
 from werkzeug.security import generate_password_hash
+from conexao import conectar
 
 USUARIO_TESTE = "pytest_user"
 SENHA_TESTE = "senha_de_teste_123"
@@ -10,7 +11,7 @@ SENHA_TESTE = "senha_de_teste_123"
 def usuario_teste():
     senha_hash = generate_password_hash(SENHA_TESTE)
 
-    db = sqlite3.connect('database.db')
+    db = conectar()
     cursor = db.cursor()
     cursor.execute(
         "INSERT OR IGNORE INTO usuarios (usuario, senha_hash) VALUES (?, ?)",
@@ -21,7 +22,7 @@ def usuario_teste():
 
     yield {"usuario": USUARIO_TESTE, "senha": SENHA_TESTE}
 
-    db = sqlite3.connect('database.db')
+    db = conectar()
     cursor = db.cursor()
     cursor.execute("DELETE FROM usuarios WHERE usuario = ?", (USUARIO_TESTE,))
     db.commit()
@@ -39,7 +40,7 @@ AGENDAMENTO_TESTE = {
 
 
 def apagar_agendamento_teste():
-    db = sqlite3.connect('database.db')
+    db = conectar()
     cursor = db.cursor()
     cursor.execute(
         "DELETE FROM agendamentos WHERE nome = ? AND data = ? AND hora = ?",

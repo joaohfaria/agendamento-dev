@@ -1,7 +1,7 @@
-import sqlite3
+from conexao import conectar
 
 def criar_tabelas():
-    connection = sqlite3.connect('database.db')
+    connection = conectar()
     cursor = connection.cursor()
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS agendamentos (
