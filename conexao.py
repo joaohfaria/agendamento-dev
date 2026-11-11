@@ -1,6 +1,14 @@
-import sqlite3
+import os
+import psycopg
+from dotenv import load_dotenv
 
-CAMINHO_DATABASE = 'database.db'
+load_dotenv()
+
 
 def conectar():
-    return sqlite3.connect(CAMINHO_DATABASE)
+    url = os.getenv('DATABASE_URL')
+
+    if not url:
+        raise RuntimeError("DATABASE_URL nao definida. Confira o .env (local) ou as variaveis de ambiente (Render).")
+
+    return psycopg.connect(url)

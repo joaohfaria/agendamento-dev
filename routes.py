@@ -66,35 +66,31 @@ def agendar():
         db = conectar()
         cursor = db.cursor()
 
-        cursor.execute("SELECT id FROM agendamentos WHERE data = ? AND hora = ?", (data, hora))
+        cursor.execute("SELECT id FROM agendamentos WHERE data = %s AND hora = %s", (data, hora))
         agendamento_existente = cursor.fetchone()
-        
-    
 
         if agendamento_existente:
             return pagina_inicial("Já existe um agendamento para essa data e hora. Escolha outro horário.", dados_preenchidos)
 
-        cursor.execute("SELECT id FROM servicos WHERE nome = ?", (servico,))
+        cursor.execute("SELECT id FROM servicos WHERE nome = %s", (servico,))
         servico_encontrado = cursor.fetchone()
 
         if not servico_encontrado:
-        
             return pagina_inicial("Serviço inválido.", dados_preenchidos)
-  
+
         cursor.execute(
-            "INSERT INTO agendamentos (nome, email, telefone, placa, data, hora, servico) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO agendamentos (nome, email, telefone, placa, data, hora, servico) VALUES (%s, %s, %s, %s, %s, %s, %s)",
             (nome, email, telefone, placa, data, hora, servico)
         )
         db.commit()
-        
 
         flash(f"Seu agendamento foi realizado com sucesso {nome} para {data} às {hora}.")
         return redirect(url_for('agendamento_confirmado'))
-    
+
     finally:
         if db:
             db.close()
-   
+
 
 @app.route('/agendamentos')
 def agendamentos():
@@ -111,6 +107,7 @@ def agendamentos():
 
     return render_template('agendamentos.html', agendamentos=lista)
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -120,7 +117,7 @@ def login():
         db = conectar()
         cursor = db.cursor()
 
-        cursor.execute("SELECT senha_hash FROM usuarios WHERE usuario = ?", (usuario,))
+        cursor.execute("SELECT senha_hash FROM usuarios WHERE usuario = %s", (usuario,))
         encontrado = cursor.fetchone()
 
         db.close()
@@ -138,6 +135,7 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/atualizar_status/<int:agendamento_id>', methods=['POST'])
 def atualizar_status(agendamento_id):
     if 'usuario' not in sessao:
@@ -152,20 +150,19 @@ def atualizar_status(agendamento_id):
     db = conectar()
     cursor = db.cursor()
 
-    cursor.execute("UPDATE agendamentos SET status = ? WHERE id = ?", (novo_status, agendamento_id))
+    cursor.execute("UPDATE agendamentos SET status = %s WHERE id = %s", (novo_status, agendamento_id))
     db.commit()
     db.close()
 
     return redirect(url_for('agendamentos'))
 
+
 @app.route('/agendamento_confirmado')
 def agendamento_confirmado():
     return render_template('agendamento_confirmado.html')
+
 
 @app.route('/logout')
 def logout():
     sessao.clear()
     return redirect(url_for('login'))
-
-
-

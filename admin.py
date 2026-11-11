@@ -1,7 +1,7 @@
 import os
-import sqlite3
 from werkzeug.security import generate_password_hash
 from conexao import conectar
+
 
 def criar_admin():
     usuario = os.getenv('ADMIN_USUARIO')
@@ -17,7 +17,7 @@ def criar_admin():
     cursor = db.cursor()
 
     cursor.execute(
-        "INSERT OR IGNORE INTO usuarios (usuario, senha_hash) VALUES (?, ?)",
+        "INSERT INTO usuarios (usuario, senha_hash) VALUES (%s, %s) ON CONFLICT (usuario) DO NOTHING",
         (usuario, senha_hash)
     )
 

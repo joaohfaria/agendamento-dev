@@ -1,4 +1,3 @@
-import sqlite3
 import pytest
 from werkzeug.security import generate_password_hash
 from conexao import conectar
@@ -14,7 +13,7 @@ def usuario_teste():
     db = conectar()
     cursor = db.cursor()
     cursor.execute(
-        "INSERT OR IGNORE INTO usuarios (usuario, senha_hash) VALUES (?, ?)",
+        "INSERT INTO usuarios (usuario, senha_hash) VALUES (%s, %s) ON CONFLICT (usuario) DO NOTHING",
         (USUARIO_TESTE, senha_hash)
     )
     db.commit()
@@ -24,10 +23,14 @@ def usuario_teste():
 
     db = conectar()
     cursor = db.cursor()
-    cursor.execute("DELETE FROM usuarios WHERE usuario = ?", (USUARIO_TESTE,))
+    cursor.execute("DELETE FROM usuarios WHERE usuario = %s", (USUARIO_TESTE,))
     db.commit()
     db.close()
 
+
+# ATENCAO: a data abaixo esta fixa. Em 2027 ela vira passado e o teste
+# quebra sozinho, sem bug nenhum no sistema. Melhoria pendente:
+# calcular uma data futura em dia util com datetime + timedelta.
 AGENDAMENTO_TESTE = {
     "nome": "PYTEST_AGENDAMENTO",
     "email": "pytest@example.com",
@@ -43,7 +46,7 @@ def apagar_agendamento_teste():
     db = conectar()
     cursor = db.cursor()
     cursor.execute(
-        "DELETE FROM agendamentos WHERE nome = ? AND data = ? AND hora = ?",
+        "DELETE FROM agendamentos WHERE nome = %s AND data = %s AND hora = %s",
         (AGENDAMENTO_TESTE["nome"], AGENDAMENTO_TESTE["data"], AGENDAMENTO_TESTE["hora"])
     )
     db.commit()
