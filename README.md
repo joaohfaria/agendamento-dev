@@ -4,7 +4,7 @@ Sistema web de agendamento para oficina mecânica. O cliente escolhe o horário 
 
 **Site no ar:** https://agendamento-subsolo.onrender.com
 
-> O projeto está hospedado no plano gratuito do Render, que coloca o serviço para dormir depois de um tempo sem acesso. A primeira visita pode levar cerca de 30 segundos para carregar.
+> Hospedado em planos gratuitos: o serviço web dorme depois de um tempo sem acesso e o banco de dados hiberna quando ocioso. A primeira visita depois de um período parado pode levar cerca de um minuto para carregar.
 
 ---
 
@@ -24,6 +24,7 @@ Sistema web de agendamento para oficina mecânica. O cliente escolhe o horário 
 - Horário já ocupado não pode ser marcado por outro cliente
 - Serviço precisa existir no cadastro do banco
 - Em caso de erro, a mensagem aparece na própria página e os dados digitados são preservados
+- Confirmação via POST/Redirect/GET: atualizar a página não duplica o agendamento
 - Área do funcionário protegida por login, com senha armazenada em hash
 - Painel com a lista de agendamentos ordenada por data e hora
 - Atualização do status de cada serviço: Aguardando, Em andamento, Pronto
@@ -36,11 +37,13 @@ Sistema web de agendamento para oficina mecânica. O cliente escolhe o horário 
 
 - **Python 3** e **Flask** — rotas, sessão e renderização
 - **Jinja2** — templates com herança a partir de um `base.html`
-- **SQLite** — banco de dados, acessado via `sqlite3` com consultas parametrizadas
+- **PostgreSQL** (hospedado no **Neon**) — banco de dados, acessado via **psycopg** com consultas parametrizadas
 - **Werkzeug** — hash de senha (`generate_password_hash` / `check_password_hash`)
 - **pytest** — testes automatizados
 - **python-dotenv** — variáveis de ambiente em desenvolvimento
 - **Gunicorn** e **Render** — servidor de produção e hospedagem
+
+Ambientes separados: desenvolvimento e testes usam uma branch `dev` do banco; produção usa a branch `production`. O código é idêntico nos dois — só o valor de `DATABASE_URL` muda.
 
 ---
 
@@ -49,10 +52,11 @@ Sistema web de agendamento para oficina mecânica. O cliente escolhe o horário 
 ```
 main.py          cria e configura a aplicação Flask
 routes.py        as rotas do site
+conexao.py       único ponto de contato com o banco de dados
 validacoes.py    regras de negócio (horários, datas, status) — não conhece web nem banco
 database.py      criação das tabelas e cadastro inicial de serviços
 admin.py         criação do usuário administrador a partir das variáveis de ambiente
-conftest.py      fixture do pytest que cria e remove o usuário de teste
+conftest.py      fixtures do pytest (usuário e agendamento de teste)
 test_client.py   testes automatizados
 templates/       páginas HTML
 static/          folha de estilo
@@ -81,16 +85,23 @@ Instale as dependências:
 pip install -r requirements.txt
 ```
 
-Crie um arquivo `.env` na raiz com as variáveis abaixo (os valores são seus; este arquivo não vai para o repositório):
+O projeto precisa de um banco PostgreSQL. Qualquer instância serve — local ou hospedada. Com a connection string em mãos, crie um arquivo `.env` na raiz (este arquivo não vai para o repositório):
 
 ```
+DATABASE_URL=postgresql://usuario:senha@host/banco
 SECRET_KEY=uma-chave-longa-e-aleatoria
 ADMIN_USUARIO=nome-do-usuario-administrador
 ADMIN_SENHA=senha-do-administrador
 FLASK_DEBUG=1
 ```
 
-A aplicação não sobe sem `SECRET_KEY` — ela falha na inicialização com uma mensagem explícita, de propósito, para não rodar com sessão insegura.
+A aplicação não sobe sem `SECRET_KEY` nem sem `DATABASE_URL` — ela falha na inicialização com uma mensagem explícita, de propósito, para não rodar com sessão insegura ou sem banco.
+
+Crie as tabelas e o cadastro inicial de serviços:
+
+```bash
+python database.py
+```
 
 Rode:
 
@@ -98,7 +109,7 @@ Rode:
 python main.py
 ```
 
-O site fica em `http://127.0.0.1:5000`. As tabelas e o usuário administrador são criados automaticamente na primeira execução.
+O site fica em `http://127.0.0.1:5000`. O usuário administrador é criado automaticamente na primeira execução, a partir das variáveis de ambiente.
 
 ---
 
@@ -108,43 +119,46 @@ O site fica em `http://127.0.0.1:5000`. As tabelas e o usuário administrador s�
 pytest
 ```
 
-São 5 testes automatizados, que verificam:
+São 7 testes automatizados, que verificam:
 
 - a página inicial responde e traz os campos do formulário
 - a lista de agendamentos redireciona quem não está logado
 - a lista de agendamentos abre para quem está logado
 - o login funciona com credenciais válidas
+- o login é recusado com senha errada
+- um agendamento válido é criado e confirmado
 - um status fora da lista permitida é recusado com HTTP 400
 
-O usuário usado nos testes é criado e apagado por uma fixture do pytest, então nenhuma senha real aparece no código.
+Os dados usados nos testes são criados e removidos por fixtures do pytest, então nenhuma senha real aparece no código e o banco fica limpo depois da execução. Os testes rodam contra a branch de desenvolvimento, nunca contra produção.
 
 ---
 
 ## Segurança
 
 - Senhas gravadas apenas como hash, nunca em texto
-- Todas as consultas SQL usam parâmetros (`?`), nunca concatenação de texto
+- Todas as consultas SQL usam parâmetros, nunca concatenação de texto
 - Segredos em variáveis de ambiente, com valores diferentes em desenvolvimento e produção
-- `.env` e o arquivo do banco fora do controle de versão
+- `.env` fora do controle de versão
 - Rotas da área do funcionário verificam a sessão antes de qualquer operação
 - Dados vindos do formulário são validados no servidor, independentemente do que o HTML oferece
+- Conexões com o banco são fechadas em `finally`, inclusive quando a requisição termina em erro
 
 ---
 
 ## Limitações conhecidas
 
-- **O banco é apagado nos reinícios.** O SQLite grava num arquivo em disco, e o disco do plano gratuito do Render é efêmero: a cada deploy ou reinício do serviço os agendamentos são perdidos. A correção é migrar para PostgreSQL, e é a próxima tarefa do projeto.
 - **Não existe tela para trocar a senha.** A senha do administrador só muda pela variável de ambiente.
 - **Não há confirmação por e-mail nem lembrete automático** para o cliente.
 - **Os horários ocupados continuam aparecendo na lista** do formulário; o cliente só descobre que o horário está tomado depois de enviar.
+- **A primeira requisição depois de um período ocioso é lenta**, porque tanto o serviço web quanto o banco hibernam nos planos gratuitos.
 
 ---
 
 ## Próximos passos
 
-- Migrar o banco para PostgreSQL
 - Esconder da tela os horários já ocupados, usando JavaScript
 - Tela de troca de senha
+- Organizar as rotas em Blueprints
 - Lembrete automático por e-mail para o cliente
 
 ---
