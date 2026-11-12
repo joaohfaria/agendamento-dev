@@ -7,6 +7,28 @@ from datetime import datetime
 from validacoes import validar_agendamento, HORARIOS_PERMITIDOS, STATUS_PERMITIDOS
 from conexao import conectar
 
+@app.route('/horarios_livres/<data>')
+def horarios_livres(data):
+
+    try:
+        datetime.strptime(data, '%Y-%m-%d')
+    except ValueError:
+        return {"erro": "Formato de data inválido. Use AAAA-MM-DD."}, 400
+    
+    db = None
+    try:
+        db = conectar()
+        cursor = db.cursor()
+
+        cursor.execute("SELECT hora FROM agendamentos WHERE data = %s", (data,))
+        horarios_ocupados = [row[0] for row in cursor.fetchall()]
+
+        horarios_livres = [hora for hora in HORARIOS_PERMITIDOS if hora not in horarios_ocupados]
+    finally:
+        if db:
+            db.close()
+
+    return {"horarios_livres": horarios_livres}
 
 def buscar_servicos():
     connection = None
