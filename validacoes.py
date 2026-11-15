@@ -67,6 +67,16 @@ def validar_agendamento(data_str: str, hora_str: str) -> str | None:
 
     return None
 
-   
-        
+def data_disponivel(data_str: str, ):   
+    formato_data = "%Y-%m-%d"
+    
+    objeto_data_disponivel = datetime.strptime(data_str, formato_data)
+    
+    if objeto_data_disponivel.weekday() >= 5:
+        return "Oficina fechada aos finais de semana."
+
+    if objeto_data_disponivel.date() < datetime.now().date():
+        return "Escolha uma data futura, Por favor!"
+    
+    return None
 

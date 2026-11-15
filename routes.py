@@ -4,7 +4,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask import session as sessao
 from werkzeug.security import check_password_hash
 from datetime import datetime
-from validacoes import validar_agendamento, HORARIOS_PERMITIDOS, STATUS_PERMITIDOS
+from validacoes import validar_agendamento, data_disponivel, HORARIOS_PERMITIDOS, STATUS_PERMITIDOS
 from conexao import conectar
 
 @app.route('/horarios_livres/<data>')
@@ -14,6 +14,10 @@ def horarios_livres(data):
         datetime.strptime(data, '%Y-%m-%d')
     except ValueError:
         return {"erro": "Formato de data inválido. Use AAAA-MM-DD."}, 400
+
+    erro = data_disponivel(data)
+    if erro:
+        return {"horarios_livres": []}
     
     db = None
     try:
