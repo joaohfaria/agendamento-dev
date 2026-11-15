@@ -1,6 +1,18 @@
 const inputData = document.getElementById("data");
 const inputHora = document.getElementById("hora");
 
+function atualizarHorarios(lista) {
+    const selectHora = document.getElementById("hora");
+    selectHora.innerHTML = "";
+
+    lista.forEach(hora => {
+        const option = document.createElement("option");
+        option.value = hora;
+        option.textContent = hora;
+        selectHora.appendChild(option);
+    });
+}
+
 async function chamarApi(data) {
     const url = "/horarios_livres/" + data;
 
@@ -8,6 +20,7 @@ async function chamarApi(data) {
         const resp = await fetch(url);
         const resultado = await resp.json();
         console.log("Dados recebidos:", resultado);
+        atualizarHorarios(resultado.horarios_livres);
     } catch (error) {
         console.error("Erro ao chamar a API:", error);
     }
@@ -24,5 +37,7 @@ inputHora.addEventListener("change", () => {
     
     console.log("Hora selecionada:", horaSelecionada);
 });
+
+
     
 
