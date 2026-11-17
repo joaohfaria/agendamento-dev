@@ -21,7 +21,9 @@ Sistema web de agendamento para oficina mecânica. O cliente escolhe o horário 
 - Formulário público de agendamento com nome, e-mail, telefone, placa, data, horário e serviço
 - Horários gerados automaticamente em intervalos de 45 minutos, das 08:15 às 17:20
 - Agendamento recusado quando a data já passou, cai em fim de semana ou no horário de almoço (12:00 às 13:00)
-- Horário já ocupado não pode ser marcado por outro cliente
+- Ao escolher a data, o formulário mostra apenas os horários livres daquele dia, atualizando sem recarregar a página
+- Fins de semana e datas passadas aparecem sem horários disponíveis, com aviso para o cliente
+- Horário já ocupado não pode ser marcado por outro cliente — a regra também é verificada no servidor no momento do envio
 - Serviço precisa existir no cadastro do banco
 - Em caso de erro, a mensagem aparece na própria página e os dados digitados são preservados
 - Confirmação via POST/Redirect/GET: atualizar a página não duplica o agendamento
@@ -37,6 +39,7 @@ Sistema web de agendamento para oficina mecânica. O cliente escolhe o horário 
 
 - **Python 3** e **Flask** — rotas, sessão e renderização
 - **Jinja2** — templates com herança a partir de um `base.html`
+- **JavaScript** — busca os horários livres com `fetch` e atualiza o formulário dinamicamente
 - **PostgreSQL** (hospedado no **Neon**) — banco de dados, acessado via **psycopg** com consultas parametrizadas
 - **Werkzeug** — hash de senha (`generate_password_hash` / `check_password_hash`)
 - **pytest** — testes automatizados
@@ -51,7 +54,7 @@ Ambientes separados: desenvolvimento e testes usam uma branch `dev` do banco; pr
 
 ```
 main.py          cria e configura a aplicação Flask
-routes.py        as rotas do site
+routes.py        as rotas do site, incluindo a rota JSON de horários livres
 conexao.py       único ponto de contato com o banco de dados
 validacoes.py    regras de negócio (horários, datas, status) — não conhece web nem banco
 database.py      criação das tabelas e cadastro inicial de serviços
@@ -59,7 +62,7 @@ admin.py         criação do usuário administrador a partir das variáveis de 
 conftest.py      fixtures do pytest (usuário e agendamento de teste)
 test_client.py   testes automatizados
 templates/       páginas HTML
-static/          folha de estilo
+static/          folha de estilo e o script que atualiza os horários do formulário
 ```
 
 ---
@@ -149,14 +152,12 @@ Os dados usados nos testes são criados e removidos por fixtures do pytest, ent�
 
 - **Não existe tela para trocar a senha.** A senha do administrador só muda pela variável de ambiente.
 - **Não há confirmação por e-mail nem lembrete automático** para o cliente.
-- **Os horários ocupados continuam aparecendo na lista** do formulário; o cliente só descobre que o horário está tomado depois de enviar.
 - **A primeira requisição depois de um período ocioso é lenta**, porque tanto o serviço web quanto o banco hibernam nos planos gratuitos.
 
 ---
 
 ## Próximos passos
 
-- Esconder da tela os horários já ocupados, usando JavaScript
 - Tela de troca de senha
 - Organizar as rotas em Blueprints
 - Lembrete automático por e-mail para o cliente
