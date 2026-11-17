@@ -5,12 +5,34 @@ function atualizarHorarios(lista) {
     const selectHora = document.getElementById("hora");
     selectHora.innerHTML = "";
 
+    if (lista.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "Nenhum horário disponível nesta data";
+        selectHora.appendChild(option);
+        
+        return;
+    }
+
+
+    const option = document.createElement("option")
+    option.value = "";
+    option.textContent = "Selecione um horário"
+    selectHora.appendChild(option);
+
+    
+        
+
     lista.forEach(hora => {
         const option = document.createElement("option");
         option.value = hora;
         option.textContent = hora;
         selectHora.appendChild(option);
     });
+
+    
+
+
 }
 
 async function chamarApi(data) {
