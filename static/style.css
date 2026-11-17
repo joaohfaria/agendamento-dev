@@ -1,55 +1,293 @@
+/* ---------- Cores e medidas usadas no site inteiro ---------- */
+:root {
+    --fundo: #f3f4f6;
+    --superficie: #ffffff;
+    --texto: #1f2933;
+    --texto-suave: #616e7c;
+    --borda: #d9dee4;
+    --topo: #1f2328;
+    --destaque: #e8590c;
+    --destaque-escuro: #c2410c;
+    --erro-fundo: #fdecea;
+    --erro-texto: #9b1c1c;
+    --raio: 8px;
+}
+
+/* ---------- Base ---------- */
 * {
     box-sizing: border-box;
 }
 
 body {
-    font-family: system-ui, Arial, sans-serif;
-    line-height: 1.6;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f5f5f5;
-    color: #222;
+    margin: 0;
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+a {
+    color: var(--destaque-escuro);
 }
 
 h1 {
-    margin-bottom: 4px;
+    font-size: 1.75rem;
+    margin: 0 0 8px;
 }
 
+h2 {
+    font-size: 1.25rem;
+    margin: 28px 0 12px;
+}
+
+/* ---------- Cabeçalho ---------- */
+.topo {
+    background: var(--topo);
+    border-bottom: 4px solid var(--destaque);
+}
+
+.topo-conteudo {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.marca {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.marca-sub {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #b8c0c8;
+    letter-spacing: 0.04em;
+}
+
+.menu {
+    display: flex;
+    gap: 18px;
+}
+
+.menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.menu a:hover {
+    color: var(--destaque);
+}
+
+/* ---------- Área principal ---------- */
+.container {
+    width: 100%;
+    max-width: 640px;
+    margin: 28px auto;
+    padding: 28px 24px;
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+}
+
+.container-largo {
+    max-width: 1080px;
+}
+
+.descricao,
+.texto-suave {
+    color: var(--texto-suave);
+}
+
+/* ---------- Formulários (agendamento e login) ---------- */
 label {
     display: block;
-    margin-top: 16px;
     font-weight: 600;
+    margin: 16px 0 6px;
 }
 
 input,
 select {
     display: block;
     width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    background-color: #fff;
+    padding: 10px 12px;
+    font-size: 16px; /* 16px evita o zoom automático no iPhone */
+    font-family: inherit;
+    color: var(--texto);
+    background: #ffffff;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
 }
 
-button {
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--destaque);
+    box-shadow: 0 0 0 3px rgba(232, 89, 12, 0.18);
+}
+
+button,
+input[type="submit"] {
+    display: block;
     width: 100%;
     margin-top: 24px;
-    padding: 14px;
+    padding: 12px;
     font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    color: #ffffff;
+    background: var(--destaque);
     border: none;
-    border-radius: 4px;
-    background-color: #1a73e8;
-    color: #fff;
+    border-radius: var(--raio);
     cursor: pointer;
 }
 
+button:hover,
+input[type="submit"]:hover {
+    background: var(--destaque-escuro);
+}
+
+/* ---------- Mensagem de erro ---------- */
 .erro {
-    color: #8a1c1c;
-    background-color: #fdecea;
-    border: 1px solid #e0b4b0;
-    border-radius: 4px;
+    background: var(--erro-fundo);
+    color: var(--erro-texto);
+    border-left: 4px solid var(--erro-texto);
+    padding: 12px 14px;
+    border-radius: var(--raio);
+    margin: 16px 0;
+}
+
+/* ---------- Tabela de agendamentos ---------- */
+.tabela-wrapper {
+    overflow-x: auto; /* no celular, a tabela rola de lado em vez de quebrar a página */
+    margin-top: 20px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+}
+
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.tabela th {
+    background: #f8f9fa;
+    text-align: left;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--texto-suave);
     padding: 12px;
-    margin-bottom: 16px;
+    border-bottom: 1px solid var(--borda);
+    white-space: nowrap;
+}
+
+.tabela td {
+    padding: 12px;
+    border-bottom: 1px solid var(--borda);
+    vertical-align: middle;
+}
+
+.tabela tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabela tbody tr:hover {
+    background: #fafbfc;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.placa {
+    font-family: Consolas, "Courier New", monospace;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.vazio {
+    text-align: center;
+    color: var(--texto-suave);
+    padding: 32px;
+}
+
+/* ---------- Etiquetas de status ---------- */
+.status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-aguardando {
+    background: #fff4d6;
+    color: #8a5a00;
+}
+
+.status-em-andamento {
+    background: #dbeafe;
+    color: #1e4f9c;
+}
+
+.status-pronto {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* ---------- Formulário de status dentro da tabela ---------- */
+.form-status {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    min-width: 230px;
+}
+
+.form-status select {
+    padding: 6px 8px;
+    font-size: 14px;
+}
+
+.form-status button {
+    width: auto;
+    margin-top: 0;
+    padding: 7px 14px;
+    font-size: 14px;
+}
+
+/* ---------- Rodapé ---------- */
+.rodape {
+    margin-top: auto; /* empurra o rodapé para o fim da tela */
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+    padding: 20px 16px 28px;
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 680px) {
+    .container {
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        padding: 20px 16px;
+    }
 }

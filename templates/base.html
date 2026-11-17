@@ -9,7 +9,29 @@
 </head>
 <body>
 
-    {% block conteudo %}{% endblock %}
+    <header class="topo">
+        <div class="topo-conteudo">
+            <a href="{{ url_for('index') }}" class="marca">
+                SubSolo
+                <span class="marca-sub">Oficina mecânica</span>
+            </a>
+
+            {% if session.get('usuario') %}
+            <nav class="menu">
+                <a href="{{ url_for('agendamentos') }}">Agendamentos</a>
+                <a href="{{ url_for('logout') }}">Sair</a>
+            </nav>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="container {% block largura %}{% endblock %}">
+        {% block conteudo %}{% endblock %}
+    </main>
+
+    <footer class="rodape">
+        SubSolo · Poços de Caldas - MG · Segunda a sexta, das 8h às 18h
+    </footer>
 
 </body>
 </html>

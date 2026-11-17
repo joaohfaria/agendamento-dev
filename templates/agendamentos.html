@@ -1,20 +1,59 @@
 {% extends "base.html" %}
 
-{% block titulo %}SubSolo - Agendamento{% endblock %}
+{% block titulo %}SubSolo - Agendamentos{% endblock %}
+
+{% block largura %}container-largo{% endblock %}
 
 {% block conteudo %}
     <h1>Agendamentos</h1>
-    [<a href="{{ url_for('logout') }}">Sair</a>]
-    <p>Lista de serviços agendados:</p>
-    {% for item in agendamentos %}
-    <p>{{ item[1] }} - {{ item[2] }} - {{ item[3] }} - {{ item[4] }} - {{ item[5] }} - {{ item[6] }} - {{ item[7] }} - {{ item[8] }} </p>
-    <form method="post" action="{{ url_for('atualizar_status', agendamento_id=item[0]) }}">
-        <select name="status">
-            <option value="Aguardando" {% if item[8] == "Aguardando" %}selected{% endif %}>Aguardando</option>
-            <option value="Em andamento" {% if item[8] == "Em andamento" %}selected{% endif %}>Em andamento</option>
-            <option value="Pronto" {% if item[8] == "Pronto" %}selected{% endif %}>Pronto</option>
-        </select>
-        <input type="submit" value="Atualizar Status">
-    </form>
-    {% endfor %}
+    <p class="descricao">Serviços marcados, em ordem de data e horário.</p>
+
+    <div class="tabela-wrapper">
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Contato</th>
+                    <th>Placa</th>
+                    <th>Serviço</th>
+                    <th>Status</th>
+                    <th>Alterar status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in agendamentos %}
+                <tr>
+                    <td class="nowrap">{{ item[5][8:10] }}/{{ item[5][5:7] }}/{{ item[5][0:4] }}</td>
+                    <td>{{ item[6] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>
+                        {{ item[3] }}<br>
+                        <span class="texto-suave">{{ item[2] }}</span>
+                    </td>
+                    <td class="placa">{{ item[4] }}</td>
+                    <td>{{ item[7] }}</td>
+                    <td>
+                        <span class="status status-{{ item[8]|lower|replace(' ', '-') }}">{{ item[8] }}</span>
+                    </td>
+                    <td>
+                        <form method="post" action="{{ url_for('atualizar_status', agendamento_id=item[0]) }}" class="form-status">
+                            <select name="status">
+                                <option value="Aguardando" {% if item[8] == "Aguardando" %}selected{% endif %}>Aguardando</option>
+                                <option value="Em andamento" {% if item[8] == "Em andamento" %}selected{% endif %}>Em andamento</option>
+                                <option value="Pronto" {% if item[8] == "Pronto" %}selected{% endif %}>Pronto</option>
+                            </select>
+                            <button type="submit">Salvar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="vazio">Nenhum agendamento por enquanto.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
