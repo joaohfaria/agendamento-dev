@@ -291,3 +291,12 @@ input[type="submit"]:hover {
         padding: 20px 16px;
     }
 }
+
+.sucesso {
+    background: #dcfce7;
+    color: #166534;
+    border-left: 4px solid #166534;
+    padding: 12px 14px;
+    border-radius: var(--raio);
+    margin: 16px 0;
+}

@@ -2,7 +2,7 @@
 from main import app
 from flask import render_template, request, redirect, url_for, flash
 from flask import session as sessao
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from validacoes import validar_agendamento, data_disponivel, HORARIOS_PERMITIDOS, STATUS_PERMITIDOS
 from conexao import conectar
@@ -192,3 +192,49 @@ def agendamento_confirmado():
 def logout():
     sessao.clear()
     return redirect(url_for('login'))
+
+@app.route('/trocar_senha', methods=['GET', 'POST'])
+def trocar_senha():
+    if 'usuario' not in sessao:
+        return redirect(url_for('login'))
+
+    if request.method == 'GET':
+        return render_template('trocar_senha.html')
+
+    senha_atual = request.form.get('senha_atual')
+    senha_nova = request.form.get('senha_nova')
+    confirmacao = request.form.get('confirmacao')
+
+    if not all([senha_atual, senha_nova, confirmacao]):
+        return render_template('trocar_senha.html', erro="Preencha todos os campos.")
+
+    if senha_nova != confirmacao:
+        return render_template('trocar_senha.html', erro="As senhas novas não conferem.")
+
+    if len(senha_nova) < 8:
+        return render_template('trocar_senha.html', erro="A senha nova precisa ter pelo menos 8 caracteres.")
+
+    usuario = sessao['usuario']
+
+    db = None
+    try:
+        db = conectar()
+        cursor = db.cursor()
+
+        cursor.execute("SELECT senha_hash FROM usuarios WHERE usuario = %s", (usuario,))
+        encontrado = cursor.fetchone()
+
+        if not encontrado or not check_password_hash(encontrado[0], senha_atual):
+            return render_template('trocar_senha.html', erro="Senha atual incorreta.")
+
+        novo_hash = generate_password_hash(senha_nova)
+        cursor.execute("UPDATE usuarios SET senha_hash = %s WHERE usuario = %s", (novo_hash, usuario))
+        db.commit()
+    finally:
+        if db:
+            db.close()
+
+    flash("Senha alterada com sucesso.")
+    return redirect(url_for('agendamentos'))
+
+        
