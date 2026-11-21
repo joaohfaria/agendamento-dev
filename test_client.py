@@ -63,3 +63,30 @@ def test_agendamento_valido(agendamento_teste):
     assert response.status_code == 200
     assert 'sucesso' in response.data.decode('utf-8')
 
+def test_trocar_senha_sucesso(usuario_teste):
+    response = client.post(
+        '/login',
+        data={'usuario': usuario_teste['usuario'], 'senha': usuario_teste['senha']},
+        follow_redirects=True
+    )
+    
+    response = client.post(
+        '/trocar_senha',
+        data={'senha_atual': usuario_teste['senha'], 'senha_nova': 'senha_nova_teste_123', 'confirmacao': 'senha_nova_teste_123'},
+        follow_redirects=True    
+    )
+    
+    assert response.status_code == 200
+    assert 'sucesso' in response.data.decode('utf-8')
+
+    client.get('/logout')
+    
+    response = client.post(
+        '/login',
+        data={'usuario': usuario_teste['usuario'], 'senha': 'senha_nova_teste_123'},
+        follow_redirects=True
+    )
+    
+    
+    assert response.status_code == 200
+    assert 'Agendamentos' in response.data.decode('utf-8')
